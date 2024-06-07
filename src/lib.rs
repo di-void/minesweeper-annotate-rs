@@ -33,7 +33,6 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
         for (row_index, row) in minefield.iter().enumerate() {
             let owned_row = Vec::from(row.as_bytes());
             annotated_minefield.push(owned_row.clone());
-            println!("Minfield: {:#?}", annotated_minefield);
 
             for (col_index, &cell) in owned_row.iter().enumerate() {
                 if cell == MINE {
@@ -117,7 +116,6 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                         if col_index as u8 > mid {
                             continue;
                         } else if row_index as u8 == row {
-                            println!("low: {}, mid: {}, max: {:#?}", lower_bound, mid, max);
                             let upper_bound = max.unwrap_or(mid);
 
                             update_adjacent(
