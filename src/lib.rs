@@ -132,9 +132,9 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                 }
             }
         }
-
-        // annotated_minefield
     }
+
+    // annotated_minefield
     annotated_minefield
         .iter()
         .map(|byte_arr| String::from_utf8(byte_arr.clone()).unwrap())
