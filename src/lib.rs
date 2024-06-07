@@ -168,6 +168,11 @@ fn is_valid_count_byte(byte: u8) -> bool {
 
 // adjacent checkpoints
 
+// t: terminus
+// i: intermmediate
+// r: row
+// c: col
+
 // hr => 2; (left and right)
 // tr x tc => 3 = t(r x c) => 3 (space search)
 // tr x ic => 4 (mine search)
