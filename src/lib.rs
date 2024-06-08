@@ -185,6 +185,10 @@ fn is_terminus_or_inter(row_index: u8, col_index: u8, fw: u8, fh: u8) -> POSITIO
     let ir = row_index > 0 && row_index < fh - 1;
     let tc = col_index == 0 || col_index == fw - 1;
     let ic = col_index > 0 && col_index < fw - 1;
+    let safe_index = 1 % fw;
+    let incr_col_index = col_index + 1;
+    let decr_col_index = col_index as i8 - 1;
+    let incr_row_index = row_index + 1;
 
     if tr && tc {
         // there are 4 possible mine positions for trtc
@@ -192,15 +196,17 @@ fn is_terminus_or_inter(row_index: u8, col_index: u8, fw: u8, fh: u8) -> POSITIO
 
         let pos_res = row_index + col_index;
         let neg_res = row_index as i8 - col_index as i8;
-        let safe_index = 1 % fw;
 
         // checkpoints
         if pos_res == 0 {
-            return POSITION::TrTc(safe_index, Down(row_index + 1, 0, safe_index, None));
+            return POSITION::TrTc(safe_index, Down(incr_row_index, 0, safe_index, None));
         }
 
         if neg_res < 0 {
-            return POSITION::TrTc(pos_res - 1, Down(row_index + 1, pos_res - 1, pos_res, None));
+            return POSITION::TrTc(
+                pos_res - 1,
+                Down(incr_row_index, pos_res - 1, pos_res, None),
+            );
         }
 
         if neg_res > 0 && col_index < fw - 1 {
@@ -212,57 +218,47 @@ fn is_terminus_or_inter(row_index: u8, col_index: u8, fw: u8, fh: u8) -> POSITIO
             Up(col_index - safe_index, col_index, None),
         );
     } else if tr && ic {
-        let incr_col_index = col_index + 1;
-        let decr_col_index = col_index - 1;
-
         if row_index < col_index {
             return POSITION::TrIc(
-                decr_col_index,
+                decr_col_index as u8,
                 incr_col_index,
                 Down(
-                    row_index + 1,
-                    decr_col_index,
+                    incr_row_index,
+                    decr_col_index as u8,
                     col_index,
                     Some(incr_col_index),
                 ),
             );
         } else {
             return POSITION::TrIc(
-                decr_col_index,
+                decr_col_index as u8,
                 incr_col_index,
-                Up(decr_col_index, col_index, Some(incr_col_index)),
+                Up(decr_col_index as u8, col_index, Some(incr_col_index)),
             );
         }
     } else if ir && tc {
-        let safe_index = 1 % fw;
-        let neg_res = col_index as i8 - 1;
-
-        if neg_res < 0 {
+        if decr_col_index < 0 {
             return POSITION::IrTc(
                 safe_index,
                 Up(col_index, safe_index, None),
-                Down(row_index + 1, col_index, safe_index, None),
+                Down(incr_row_index, col_index, safe_index, None),
             );
         }
 
-        let decr_col_index = col_index - 1;
-
         return POSITION::IrTc(
-            decr_col_index,
-            Up(decr_col_index, col_index, None),
-            Down(row_index + 1, decr_col_index, col_index, None),
+            decr_col_index as u8,
+            Up(decr_col_index as u8, col_index, None),
+            Down(incr_row_index, decr_col_index as u8, col_index, None),
         );
     } else {
         // field will have at least 3 columns and 3 rows
-        let incr_col_index = col_index + 1;
-        let decr_col_index = col_index - 1;
         return POSITION::IrIc(
-            decr_col_index,
+            decr_col_index as u8,
             incr_col_index,
-            Up(decr_col_index, col_index, Some(incr_col_index)),
+            Up(decr_col_index as u8 as u8, col_index, Some(incr_col_index)),
             Down(
-                row_index + 1,
-                decr_col_index,
+                incr_row_index,
+                decr_col_index as u8,
                 col_index,
                 Some(incr_col_index),
             ),
