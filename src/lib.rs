@@ -255,7 +255,7 @@ fn is_terminus_or_inter(row_index: u8, col_index: u8, fw: u8, fh: u8) -> POSITIO
         return POSITION::IrIc(
             decr_col_index as u8,
             incr_col_index,
-            Up(decr_col_index as u8 as u8, col_index, Some(incr_col_index)),
+            Up(decr_col_index as u8, col_index, Some(incr_col_index)),
             Down(
                 incr_row_index,
                 decr_col_index as u8,
